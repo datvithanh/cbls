@@ -36,11 +36,6 @@ public class ConditionalSumVarInt extends AbstractInvariant implements
 		if(_posted) return;
 		_posted = true;
 		
-		HashSet<VarIntLS> _S=new HashSet<VarIntLS>();
-		for(int i=0;i<_x.length;i++)
-		{
-			_S.add(_x[i]);
-		}
 		_map=new HashMap<VarIntLS, Integer>();
 		for(int i=0;i<_x.length;i++)
 		{

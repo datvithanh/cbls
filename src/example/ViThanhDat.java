@@ -109,46 +109,4 @@ public class ViThanhDat {
         d.search();
         d.printResult();
     }
-//  Step 0, violations = 306
-//	Step 1, violations = 270
-//	Step 2, violations = 240
-//	Step 3, violations = 210
-//	Step 4, violations = 185
-//	Step 5, violations = 160
-//	Step 6, violations = 135
-//	Step 7, violations = 113
-//	Step 8, violations = 93
-//	Step 9, violations = 73
-//	Step 10, violations = 53
-//	Step 11, violations = 37
-//	Step 12, violations = 21
-//	Step 13, violations = 10
-//	Step 14, violations = 0
-//
-//	------Result------
-//	X0 = 2
-//	X1 = 1
-//	X2 = 0
-//	X3 = 4
-//	X4 = 0
-//	X5 = 2
-//	X6 = 1
-//	X7 = 3
-//	X8 = 0
-//	X9 = 4
-//	X10 = 4
-//	X11 = 3
-//	X12 = 4
-//	X13 = 0
-//	X14 = 4
-//	X15 = 3
-//	X16 = 1
-//	X17 = 2
-//	X18 = 2
-//	X19 = 0
-//	C0 = 60
-//	C1 = 70
-//	C2 = 90
-//	C3 = 80
-//	C4 = 100
 }

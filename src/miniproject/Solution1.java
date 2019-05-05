@@ -10,13 +10,14 @@ import localsearch.model.ConstraintSystem;
 import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
+import localsearch.search.TabuSearch;
 
-public class Solution {
+public class Solution1 {
 	private MinMaxTypeMultiKnapsackInputItem[] items;
 	private MinMaxTypeMultiKnapsackInputBin[] bins;
 	private int maxCategories;
 	private int maxClasses;
-	
+	private int coef = 1000;
 	LocalSearchManager mgr;
 	ConstraintSystem S;
 
@@ -33,9 +34,17 @@ public class Solution {
     int[] P;
     
     public static VarIntLS[] getColumn(VarIntLS[][] array, int index){
-    	VarIntLS[] column = new VarIntLS[array[0].length];
-        for(int i=0; i<column.length; i++){
-           column[i] = array[i][index];
+    	VarIntLS[] column = new VarIntLS[array.length];
+        for(int i=0; i < array.length; i++){
+        	column[i] = array[i][index];
+        }
+        return column;
+    }
+    
+    public static int[] getColumn(int[][] array, int index){
+    	int[] column = new int[array.length];
+        for(int i=0; i < array.length; i++){
+        	column[i] = array[i][index];
         }
         return column;
     }
@@ -84,9 +93,9 @@ public class Solution {
         	selCat[j] = new ConditionalSum(cat[j], 1);
         	selCla[j] = new ConditionalSum(cla[j], 1);
         	
-        	S.post(new LessOrEqual(loadedW[j], (int) bins[j].getCapacity()));
-        	S.post(new LessOrEqual((int) bins[j].getMinLoad(), loadedW[j]));
-        	S.post(new LessOrEqual(loadedP[j], (int) bins[j].getP()));
+        	S.post(new LessOrEqual(loadedW[j], (int) (coef * bins[j].getCapacity())));
+        	S.post(new LessOrEqual((int) (coef*bins[j].getMinLoad()), loadedW[j]));
+        	S.post(new LessOrEqual(loadedP[j], (int) (coef * bins[j].getP())));
         	
         	S.post(new LessOrEqual(selCat[j], (int) bins[j].getT()));
         	S.post(new LessOrEqual(selCla[j], (int) bins[j].getR()));
@@ -104,7 +113,7 @@ public class Solution {
 		bins = b.getBins();
 		maxClasses = 0;
 		maxCategories = 0;
-		
+				
 		D = new int[items.length][bins.length];
 		W = new int[items.length];
 		P = new int[items.length];
@@ -115,22 +124,23 @@ public class Solution {
 			int[] d = items[i].getBinIndices();
 			for(int j = 0; j < d.length; ++j)
 				D[i][d[j]] = 1;
-			W[i] = (int) items[i].getW();
-			P[i] = (int) items[i].getP();
+			W[i] = (int) (coef * items[i].getW());
+			P[i] = (int) (coef * items[i].getP());
 		}
     }
     
     public void search() {
 //		TabuSearch ts = new TabuSearch();
-//		ts.search(S, 30, 10, 1000000, 100);
+//		ts.search(S, 30, 10, 10000, 100);
     	HillClimbing s = new HillClimbing();
         s.hillClimbing(S, 1000);
 	}
     
     public static void main(String[] args) {
     	String fn = "data/miniproject/MinMaxTypeMultiKnapsackInput-0.json";
-    	Solution s = new Solution();
+    	Solution1 s = new Solution1();
     	s.prepareData(fn);
+    	s.stateModel();
     	s.search();
     }
 }
