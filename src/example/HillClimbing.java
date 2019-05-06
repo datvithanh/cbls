@@ -12,11 +12,13 @@ public class HillClimbing {
         ArrayList<AssignMove> cand = new ArrayList<AssignMove>();
         Random R = new Random();
         int it = 0;
+        System.out.println("variables: " + y.length);
         while(it < maxIter && c.violations() > 0) {
+            System.out.println(it);
+
             cand.clear();
             int minDelta = Integer.MAX_VALUE;
             for(int i = 0; i < y.length; i++) {
-//                for(int v = y[i].getValue(); v <= y[i].getMaxValue(); v++) {
                 for(int v = y[i].getMinValue(); v <= y[i].getMaxValue(); v++) {
                     int d = c.getAssignDelta(y[i], v);
                     if(d < minDelta) {
