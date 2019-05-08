@@ -111,7 +111,7 @@ public class Solution3 {
 	}
     
     public static void main(String[] args) {
-    	String filein = "src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/MinMaxTypeMultiKnapsackInput-3000.json";
+		String filein = "src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/MinMaxTypeMultiKnapsackInput-3000.json";
     	
     	Solution3 sol = new Solution3();
     	sol.prepareData(filein);

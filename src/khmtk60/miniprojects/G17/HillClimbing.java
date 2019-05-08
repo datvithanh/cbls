@@ -31,7 +31,7 @@ public class HillClimbing {
             }
             int idx = R.nextInt(cand.size());   
             AssignMove m = cand.get(idx);
-            y[m.i].setValuePropagate(m.v);
+			y[m.i].setValuePropagate(m.b);
             System.out.println("Step " + it + ", violations = " + c.violations());
             it++;
         }

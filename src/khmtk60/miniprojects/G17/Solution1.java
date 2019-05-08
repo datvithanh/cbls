@@ -1,6 +1,5 @@
 package khmtk60.miniprojects.G17;
 
-import localsearch.constraints.basic.IsEqual;
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.functions.conditionalsum.ConditionalSum;
 import localsearch.functions.sum.Sum;
@@ -8,7 +7,6 @@ import localsearch.model.ConstraintSystem;
 import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
-import localsearch.search.TabuSearch;
 
 public class Solution1 {
 	private MinMaxTypeMultiKnapsackInput input;

@@ -2,7 +2,6 @@ package khmtk60.miniprojects.G17;
 
 
 import java.util.HashSet;
-
 import java.util.Set;
 
 import localsearch.constraints.basic.LessOrEqual;
@@ -153,13 +152,13 @@ public class Solution2 {
     }
     
     public static void main(String[] args) {
-    	String fn = "src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/MinMaxTypeMultiKnapsackInput-3000.json";
+		String fn = "src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/MinMaxTypeMultiKnapsackInput-1000.json";
 
     	Solution2 s = new Solution2();
     	s.prepareData(fn);
     	s.stateModel();
     	System.out.println("state done");
-//    	s.search();
+		s.search();
 //    	s.check();
     }
 }

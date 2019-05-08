@@ -2,10 +2,10 @@ package khmtk60.miniprojects.G17;
 
 class AssignMove {
 	int i;
-	int v;
+	int b;
 
-	public AssignMove(int i, int v) {
-		this.i = i;
-		this.v = v;
+	public AssignMove(int item, int bin) {
+		this.i = item;
+		this.b = bin;
 	}
 }

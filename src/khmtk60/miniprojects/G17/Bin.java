@@ -8,27 +8,42 @@ public class Bin {
 	private int r;
 	private int idx;
 	
-	private double _w;
-	private double _p;
-	private SetCount _t;
-	private int _r;
+	double _w;
+	double _p;
+	SetCount _t;
+	SetCount _r;
 
-	public int violations() {
-		int vio = 0;
-		if (_w == 0)
-			vio += 1;
-		if(_w != 0 && _w < minLoad)
-			vio += 2;
-		if (_w > capacity)
-			vio += 3;
-		if (_p > p)
-			vio += 3;
-		if (_t.size() > t)
-			vio += 2;
+	public double violations() {
+		double vio = 0;
+
+		vio += Math.max(0, _w - capacity);
+		vio += Math.max(0, _p - p);
+		vio += Math.max(0, _t.size() - t);
+		vio += Math.max(0, _r.size() - r);
+		vio += Math.max(0, minLoad - _w);
+
+		// if (_w < minLoad)
+		// vio += 0.5;
 
 		return vio;
 	}
 
+	public void addItem(Item item) {
+		_w += item.getW();
+		_p += item.getP();
+		_t.add(item.getT());
+		_r.add(item.getR());
+		item.setAssignTo(this.idx);
+		return;
+	}
+
+	public void removeItem(Item item) {
+		_w -= item.getW();
+		_p -= item.getP();
+		_t.remove(item.getT());
+		_r.remove(item.getR());
+		item.setAssignTo(-1);
+	}
 
 	public double getCapacity() {
 		return capacity;
@@ -82,7 +97,8 @@ public class Bin {
 		this._w = 0;
 		this._p = 0;
 		this._t = new SetCount();
-		this.set_r(0);
+		this._r = new SetCount();
+		this.idx = idx;
 	}
 
 
@@ -93,16 +109,6 @@ public class Bin {
 
 	public void setIdx(int idx) {
 		this.idx = idx;
-	}
-
-
-	public int get_r() {
-		return _r;
-	}
-
-
-	public void set_r(int _r) {
-		this._r = _r;
 	}
 }
 

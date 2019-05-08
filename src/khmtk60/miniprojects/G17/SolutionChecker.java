@@ -49,7 +49,9 @@ public class SolutionChecker {
 				loadP[b] += items[i].getP();
 				loadType[b].add(items[i].getT());
 				loadClass[b].add(items[i].getR());
-				
+				// if (b == 0) {
+				// System.out.println(i);
+				// }
 				boolean ok = false;
 				for(int j = 0; j < items[i].getBinIndices().length; j++){
 					if(b == items[i].getBinIndices()[j]){
@@ -65,6 +67,17 @@ public class SolutionChecker {
 		int violationP = 0;
 		int violationT = 0;
 		int violationR = 0;
+
+		for (int b = 0; b < nbBins; b++) {
+			if (loadType[b].size() > 0) {
+				for (int c : loadClass[b])
+					System.out.print(c + " ");
+				for (int c : loadType[b])
+					System.out.print(c + " ");
+				System.out.println("");
+			}
+		}
+
 		for(int b = 0; b < nbBins; b++){
 			if(loadWeight[b] > 0 && (loadWeight[b] > bins[b].getCapacity())){
 				violations++;
@@ -83,6 +96,8 @@ public class SolutionChecker {
 				violationT++;
 			}
 			if(loadClass[b].size() > bins[b].getR()){
+				// System.out.println(loadClass[b].size());
+				// System.out.println(bins[b].getR());
 				violations++;
 				violationR++;
 			}

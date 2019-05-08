@@ -20,12 +20,20 @@ public class Item {
 		this.setIdx(idx);
 	}
 
-	public int violations() {
-		return assignTo == -1 ? 2 : 0;
+	public double violations() {
+		return assignTo == -1 ? 1 : 0;
 	}
 
 	public double getW() {
 		return w;
+	}
+
+	public void setAssignTo(int assignTo) {
+		this.assignTo = assignTo;
+	}
+
+	public int getAssignTo() {
+		return assignTo;
 	}
 
 	public void setW(double w) {
