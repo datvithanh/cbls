@@ -7,7 +7,8 @@ public class Bin {
 	private int t;
 	private int r;
 	private int idx;
-	
+	private boolean usable;
+
 	double _w;
 	double _p;
 	SetCount _t;
@@ -43,6 +44,10 @@ public class Bin {
 		_t.remove(item.getT());
 		_r.remove(item.getR());
 		item.setAssignTo(-1);
+	}
+
+	public double spareW() {
+		return capacity - _w;
 	}
 
 	public double getCapacity() {
@@ -86,13 +91,14 @@ public class Bin {
 	}
 
 	public Bin(double capacity, double minLoad,
-			double p, int t, int r, int idx) {
+			double p, int t, int r, int idx, boolean usable) {
 		super();
 		this.capacity = capacity;
 		this.minLoad = minLoad;
 		this.p = p;
 		this.t = t;
 		this.r = r;
+		this.setUsable(usable);
 
 		this._w = 0;
 		this._p = 0;
@@ -109,6 +115,14 @@ public class Bin {
 
 	public void setIdx(int idx) {
 		this.idx = idx;
+	}
+
+	public boolean isUsable() {
+		return usable;
+	}
+
+	public void setUsable(boolean usable) {
+		this.usable = usable;
 	}
 }
 

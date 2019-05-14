@@ -26,13 +26,30 @@ public class State {
 		itemUsed = new HashSet<Integer>();
 		binUsed = new HashSet<Integer>();
 
+		double[] cumulatedW = new double[19];
+
+		for (int i = 0; i < its.length; ++i)
+			cumulatedW[its[i].getR()] += its[i].getW();
+
+		double maxW = -1;
+
+		for (int i = 0; i < 19; ++i)
+			maxW = Math.max(maxW, cumulatedW[i]);
+
 		for (int i = 0; i < its.length; ++i)
 			items[i] = new Item(its[i].getW(), its[i].getP(), its[i].getT(), its[i].getR(), its[i].getBinIndices(), i);
 
 		for (int j = 0; j < bns.length; ++j)
 			bins[j] = new Bin(bns[j].getCapacity(), bns[j].getMinLoad(), bns[j].getP(), bns[j].getT(), bns[j].getR(),
-					j);
+					j, bns[j].getMinLoad() < maxW);
+
 		System.out.println(violations());
+	}
+
+	public void loadBinOfItems(int[] binOfItems) {
+		for(int i = 0; i < items.length; ++i)
+			if (binOfItems[i] != -1)
+				bins[binOfItems[i]].addItem(items[i]);
 	}
 
 	public double violations() {
@@ -77,6 +94,32 @@ public class State {
 		return vioB - vioA;
 	}
 
+	public boolean maintainViolationMove(Item item, Bin bin) {
+		double wBefore = 0, wAfter = 0;
+
+		if (item.getAssignTo() == bin.getIdx())
+			return false;
+		
+		int prevBin = item.getAssignTo();
+
+		wBefore = Math.max(bin.spareW(), bins[prevBin].spareW());
+
+		bins[prevBin].removeItem(item);
+		bin.addItem(item);
+		
+		wAfter = Math.max(bin.spareW(), bins[prevBin].spareW());
+
+		if (bin.violations() != 0 || bins[prevBin].violations() != 0) {
+			bin.removeItem(item);
+			bins[prevBin].addItem(item);
+			return false;
+		}
+
+		bin.removeItem(item);
+		bins[prevBin].addItem(item);
+		return wAfter > wBefore;
+	}
+
 	public void moveItem(int i, int b) {
 		if (items[i].getAssignTo() == bins[b].getIdx())
 			return;
@@ -111,7 +154,7 @@ public class State {
 
 	public void hillClimbing(int maxIter) {
 		ArrayList<AssignMove> cand = new ArrayList<AssignMove>();
-		// HashSet<Pair<Integer, Integer>> tabu = new HashSet<Pair>();
+
 		Random R = new Random();
 		int it = 0;
 		HashSet<Integer> excludedBin = new HashSet<Integer>();
@@ -126,7 +169,7 @@ public class State {
 			for (int i = 0; i < bins.length; i++)
 			{
 				double binVio = bins[i].violations();
-				if (binVio > 0 && !excludedBin.contains(i)) {
+				if (binVio > 0 && !excludedBin.contains(i) && bins[i].isUsable()) {
 					if (binVio < minVio) {
 						binCand.clear();
 						binCand.add(i);
@@ -186,31 +229,89 @@ public class State {
 			AssignMove m = cand.get(candIdx);
 
 			moveItem(m.i, m.b);
-			System.out.println(bins[m.b].violations());
-			System.out.println("Step " + it + ", violations = " + violations() + ", size = " + cand.size());
+			// System.out.println(bins[m.b].violations());
+			// System.out.println("Step " + it + ", violations = " + violations() + ", size
+			// = " + cand.size());
 
 			it++;
 		}
 	}
 
-	public void search() {
-		int maxit = 1000, it = 0;
+	public void increaseSpareW() {
+		boolean movable = true;
 
-		while(it < maxit) {
+		while (movable) {
+			movable = false;
+			for (int i = 0; i < items.length; ++i)
+				if (items[i].getAssignTo() != -1)
+					for (int j : items[i].getBinIndices())
+						if (bins[j].violations() == 0)
+							if (maintainViolationMove(items[i], bins[j])) {
+								movable = true;
+								moveItem(i, j);
+							}
+		}
+	}
+
+	public void optimize() {
+		Random R = new Random();
+
+		for (int i = 0; i < items.length; ++i)
+			if (items[i].getAssignTo() == -1) {
+				ArrayList<Integer> cand = new ArrayList<Integer>();
+				for (int j : items[i].getBinIndices())
+					if (bins[j].violations() == 0) {
+						bins[j].addItem(items[i]);
+						if (bins[j].violations() == 0)
+							cand.add(j);
+						bins[j].removeItem(items[i]);
+					}
+				if (cand.size() > 0) {
+					int candIdx = R.nextInt(cand.size());
+					bins[cand.get(candIdx)].addItem(items[i]);
+					itemUsed.add(i);
+				}
+			}
+	}
+
+	public int[] getBinOfItems() {
+		int[] binOfItems = new int[items.length];
+		for (int i = 0; i < items.length; ++i)
+			binOfItems[i] = items[i].getAssignTo();
+		return binOfItems;
+	}
+
+	public int[] search() {
+		int it = 0;
+		int cnt = 0, maxItemUsed = 0;
+		while (true) {
 			System.out.println("[" + it + "]");
 			hillClimbing(10000);
 
 			clearViolatedBins();
-			
+
+			if (itemUsed.size() > maxItemUsed) {
+				cnt = 1;
+				maxItemUsed = itemUsed.size();
+			} else
+				cnt++;
+
 			System.out.println(itemUsed.size());
 
-			for (int i = 0; i < items.length; ++i)
-				System.out.print(items[i].getAssignTo() + " ");
-
-			System.out.println("");
-
+			if (cnt > 150)
+				break;
+			
 			it++;
 		}
+
+		maxItemUsed -= 1;
+
+		while (itemUsed.size() > maxItemUsed) {
+			maxItemUsed = itemUsed.size();
+			increaseSpareW();
+			optimize();
+		}
+		return getBinOfItems();
 	}
 
 	public void check() {

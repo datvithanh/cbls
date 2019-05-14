@@ -68,15 +68,15 @@ public class SolutionChecker {
 		int violationT = 0;
 		int violationR = 0;
 
-		for (int b = 0; b < nbBins; b++) {
-			if (loadType[b].size() > 0) {
-				for (int c : loadClass[b])
-					System.out.print(c + " ");
-				for (int c : loadType[b])
-					System.out.print(c + " ");
-				System.out.println("");
-			}
-		}
+		// for (int b = 0; b < nbBins; b++) {
+		// if (loadType[b].size() > 0) {
+		// for (int c : loadClass[b])
+		// System.out.print(c + " ");
+		// for (int c : loadType[b])
+		// System.out.print(c + " ");
+		// System.out.println("");
+		// }
+		// }
 
 		for(int b = 0; b < nbBins; b++){
 			if(loadWeight[b] > 0 && (loadWeight[b] > bins[b].getCapacity())){
